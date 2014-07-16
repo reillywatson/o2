@@ -19,13 +19,13 @@ Tweeter::Tweeter(QObject *parent) :
 
 void Tweeter::doOAuth() {
     o1Twitter_ = new O1Twitter(this);
-    o1Twitter_->setClientId(O2_CONSUMER_KEY);
-    o1Twitter_->setClientSecret(O2_CONSUMER_SECRET);
+    o1Twitter_->setClientId(QString::fromLatin1(O2_CONSUMER_KEY));
+    o1Twitter_->setClientSecret(QString::fromLatin1(O2_CONSUMER_SECRET));
     o1Twitter_->setLocalPort(localPort);
 
     // Create a store object for writing the received tokens
-    O2SettingsStore *store = new O2SettingsStore(O2_ENCRYPTION_KEY);
-    store->setGroupKey("twitter");
+    O2SettingsStore *store = new O2SettingsStore(QString::fromLatin1(O2_ENCRYPTION_KEY));
+    store->setGroupKey(QString::fromLatin1("twitter"));
     o1Twitter_->setStore(store);
 
     // Connect signals
@@ -46,16 +46,16 @@ void Tweeter::doOAuth() {
 
 void Tweeter::doXAuth(const QString &username, const QString &password) {
     oxTwitter_ = new OXTwitter(this);
-    oxTwitter_->setClientId(O2_CONSUMER_KEY);
-    oxTwitter_->setClientSecret(O2_CONSUMER_SECRET);
+    oxTwitter_->setClientId(QString::fromLatin1(O2_CONSUMER_KEY));
+    oxTwitter_->setClientSecret(QString::fromLatin1(O2_CONSUMER_SECRET));
     oxTwitter_->setLocalPort(localPort);
 
     oxTwitter_->setUsername(username);
     oxTwitter_->setPassword(password);
 
     // Create a store object for writing the received tokens
-    O2SettingsStore *store = new O2SettingsStore(O2_ENCRYPTION_KEY);
-    store->setGroupKey("twitter");
+    O2SettingsStore *store = new O2SettingsStore(QString::fromLatin1(O2_ENCRYPTION_KEY));
+    store->setGroupKey(QString::fromLatin1("twitter"));
     oxTwitter_->setStore(store);
 
     connect(oxTwitter_, SIGNAL(linkedChanged()),
@@ -94,10 +94,10 @@ void Tweeter::postStatusUpdate(const QString &message) {
 
     QByteArray postData = O1::createQueryParams(reqParams);
 
-    QUrl url = QUrl("https://api.twitter.com/1.1/statuses/update.json");
+    QUrl url = QUrl(QString::fromLatin1("https://api.twitter.com/1.1/statuses/update.json"));
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, O2_MIME_TYPE_XFORM);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QString::fromLatin1(O2_MIME_TYPE_XFORM));
 
     QNetworkReply *reply = requestor->post(request, reqParams, postData);
     connect(reply, SIGNAL(finished()), this, SLOT(tweetReplyDone()));

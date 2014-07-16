@@ -9,12 +9,12 @@
 #include "o2globals.h"
 #include "o2settingsstore.h"
 
-const char FB_APP_KEY[] = "227896037359072";
-const char FB_APP_SECRET[] = "3d35b063872579cf7213e09e76b65ceb";
+const QString FB_APP_KEY = QString::fromLatin1("227896037359072");
+const QString FB_APP_SECRET = QString::fromLatin1("3d35b063872579cf7213e09e76b65ceb");
 
-const char FB_REQUEST_URL[] = "https://www.facebook.com/dialog/oauth";
-const char FB_TOKEN_URL[] = "https://graph.facebook.com/oauth/access_token";
-const char FB_DEBUG_TOKEN[] = "https://graph.facebook.com/me?fields=id&access_token=%1";
+const QString FB_REQUEST_URL = QString::fromLatin1("https://www.facebook.com/dialog/oauth");
+const QString FB_TOKEN_URL = QString::fromLatin1("https://graph.facebook.com/oauth/access_token");
+const QString FB_DEBUG_TOKEN = QString::fromLatin1("https://graph.facebook.com/me?fields=id&access_token=%1");
 
 const int localPort = 8888;
 
@@ -22,7 +22,7 @@ const int localPort = 8888;
     (o::staticMetaObject.enumerator(o::staticMetaObject.indexOfEnumerator(#e)).\
     valueToKey((v)))
 
-#define GRANTFLOW_STR(v) QString(QENUM_NAME(O2, \
+#define GRANTFLOW_STR(v) QString::fromLatin1(QENUM_NAME(O2, \
     GrantFlow, v))
 
 FBDemo::FBDemo(QObject *parent) :
@@ -36,8 +36,8 @@ FBDemo::FBDemo(QObject *parent) :
     o2Facebook_->setTokenUrl(FB_TOKEN_URL);
 
     // Create a store object for writing the received tokens
-    O2SettingsStore *store = new O2SettingsStore(O2_ENCRYPTION_KEY);
-    store->setGroupKey("facebook");
+    O2SettingsStore *store = new O2SettingsStore(QString::fromLatin1(O2_ENCRYPTION_KEY));
+    store->setGroupKey(QString::fromLatin1("facebook"));
     o2Facebook_->setStore(store);
 
     connect(o2Facebook_, SIGNAL(linkedChanged()),

@@ -15,9 +15,9 @@ public:
     {
         O1::setClientId(value);
 
-        setRequestTokenUrl(QUrl("https://" + clientId() + ".freshbooks.com/oauth/oauth_request.php"));
-        setAuthorizeUrl(QUrl("https://" + clientId() + ".freshbooks.com/oauth/oauth_authorize.php"));
-        setAccessTokenUrl(QUrl("https://" + clientId() + ".freshbooks.com/oauth/oauth_access.php"));
+        setRequestTokenUrl(QUrl(QString::fromLatin1("https://%1.freshbooks.com/oauth/oauth_request.php").arg(clientId())));
+        setAuthorizeUrl(QUrl(QString::fromLatin1("https://%1.freshbooks.com/oauth/oauth_authorize.php").arg(clientId())));
+        setAccessTokenUrl(QUrl(QString::fromLatin1("https://%1.freshbooks.com/oauth/oauth_access.php").arg(clientId())));
     }
 
 

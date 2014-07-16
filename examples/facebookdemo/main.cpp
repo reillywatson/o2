@@ -5,15 +5,15 @@
 
 #include "fbdemo.h"
 
-const char OPT_OAUTH_CODE[] = "-o";
-const char OPT_VALIDATE_TOKEN[] = "-v";
+const QString OPT_OAUTH_CODE = QString::fromLatin1("-o");
+const QString OPT_VALIDATE_TOKEN = QString::fromLatin1("-v");
 
-const char USAGE[] = "\n"
+const QString USAGE = QString::fromLatin1("\n"
                      "Usage: facebookdemo [OPTION]...\n"
                      "Get OAuth2 access tokens from Facebook's OAuth service\n"
                      "\nOptions:\n"
                      "  %1\t\tLink with Facebook OAuth2 service using Authorization Code\n"
-                     "  %2\t\tValidate Access Token\n";
+                     "  %2\t\tValidate Access Token\n");
 
 
 class Helper : public QObject
@@ -29,7 +29,7 @@ public slots:
 
         QStringList argList = qApp->arguments();
 
-        QByteArray help = QString(USAGE).arg(OPT_OAUTH_CODE,
+        QByteArray help = USAGE.arg(OPT_OAUTH_CODE,
                                              OPT_VALIDATE_TOKEN).toLatin1();
 
         const char* helpText = help.constData();

@@ -58,13 +58,13 @@ void OXTwitter::link() {
     oauthParams.append(O1RequestParameter(O2_OAUTH_TOKEN, QByteArray("")));
     oauthParams.append(O1RequestParameter(O2_OAUTH_VERFIER, QByteArray("")));
 
-    QByteArray signature = sign(oauthParams, xAuthParams_, accessTokenUrl(), QNetworkAccessManager::PostOperation, clientSecret(), "");
+    QByteArray signature = sign(oauthParams, xAuthParams_, accessTokenUrl(), QNetworkAccessManager::PostOperation, clientSecret(), QString());
     oauthParams.append(O1RequestParameter(O2_OAUTH_SIGNATURE, signature));
 
     // Post request
     QNetworkRequest request(accessTokenUrl());
     request.setRawHeader(O2_HTTP_AUTHORIZATION_HEADER, buildAuthorizationHeader(oauthParams));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, O2_MIME_TYPE_XFORM);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QString::fromLatin1(O2_MIME_TYPE_XFORM));
     QNetworkReply *reply = manager_->post(request, createQueryParams(xAuthParams_));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onTokenExchangeError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(finished()), this, SLOT(onTokenExchangeFinished()));

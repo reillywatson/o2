@@ -39,7 +39,7 @@ void O2ReplyServer::onBytesReady() {
     content.append("<HTML></HTML>");
     reply.append("HTTP/1.0 200 OK \r\n");
     reply.append("Content-Type: text/html; charset=\"utf-8\"\r\n");
-    reply.append(QString("Content-Length: %1\r\n\r\n").arg(content.size()));
+    reply.append(QString::fromLatin1("Content-Length: %1\r\n\r\n").arg(content.size()).toLatin1());
     reply.append(content);
     socket->write(reply);
 
@@ -53,11 +53,11 @@ void O2ReplyServer::onBytesReady() {
 QMap<QString, QString> O2ReplyServer::parseQueryParams(QByteArray *data) {
     trace() << "O2ReplyServer::parseQueryParams";
 
-    QString splitGetLine = QString(*data).split("\r\n").first();
-    splitGetLine.remove("GET ");
-    splitGetLine.remove("HTTP/1.1");
-    splitGetLine.remove("\r\n");
-    splitGetLine.prepend("http://localhost");
+    QString splitGetLine = QString::fromLatin1(*data).split(QString::fromLatin1("\r\n")).first();
+    splitGetLine.remove(QString::fromLatin1("GET "));
+    splitGetLine.remove(QString::fromLatin1("HTTP/1.1"));
+    splitGetLine.remove(QString::fromLatin1("\r\n"));
+    splitGetLine.prepend(QString::fromLatin1("http://localhost"));
     QUrl getTokenUrl(splitGetLine);
 
     QList< QPair<QString, QString> > tokens;
@@ -71,8 +71,8 @@ QMap<QString, QString> O2ReplyServer::parseQueryParams(QByteArray *data) {
     QPair<QString, QString> tokenPair;
     foreach (tokenPair, tokens) {
         // FIXME: We are decoding key and value again. This helps with Google OAuth, but is it mandated by the standard?
-        QString key = QUrl::fromPercentEncoding(QByteArray().append(tokenPair.first.trimmed()));
-        QString value = QUrl::fromPercentEncoding(QByteArray().append(tokenPair.second.trimmed()));
+        QString key = QUrl::fromPercentEncoding(tokenPair.first.trimmed().toUtf8());
+        QString value = QUrl::fromPercentEncoding(tokenPair.second.trimmed().toUtf8());
         queryParams.insert(key, value);
     }
     return queryParams;

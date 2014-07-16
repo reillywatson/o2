@@ -8,9 +8,9 @@ class O1Flickr: public O1 {
 
 public:
     explicit O1Flickr(QObject *parent = 0): O1(parent) {
-        setRequestTokenUrl(QUrl("http://www.flickr.com/services/oauth/request_token"));
-        setAuthorizeUrl(QUrl("http://www.flickr.com/services/oauth/authorize?perms=write"));
-        setAccessTokenUrl(QUrl("http://www.flickr.com/services/oauth/access_token"));
+        setRequestTokenUrl(QUrl(QString::fromLatin1("http://www.flickr.com/services/oauth/request_token")));
+        setAuthorizeUrl(QUrl(QString::fromLatin1("http://www.flickr.com/services/oauth/authorize?perms=write")));
+        setAccessTokenUrl(QUrl(QString::fromLatin1("http://www.flickr.com/services/oauth/access_token")));
         setLocalPort(1965); // FIXME: Really needed?
     }
 };

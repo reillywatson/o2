@@ -9,11 +9,11 @@
 #include "o2facebook.h"
 #include "o2globals.h"
 
-static const char *FbEndpoint = "https://graph.facebook.com/oauth/authorize?display=touch";
-static const char *FbTokenUrl = "https://graph.facebook.com/oauth/access_token";
+static const  QString FbEndpoint = QString::fromLatin1("https://graph.facebook.com/oauth/authorize?display=touch");
+static const QString FbTokenUrl = QString::fromLatin1("https://graph.facebook.com/oauth/access_token");
 static const quint16 FbLocalPort = 1965;
 
-const char FB_EXPIRES_KEY[] = "expires";
+const QString FB_EXPIRES_KEY = QString::fromLatin1("expires");
 
 O2Facebook::O2Facebook(QObject *parent): O2(parent) {
     setRequestUrl(FbEndpoint);
@@ -23,7 +23,7 @@ O2Facebook::O2Facebook(QObject *parent): O2(parent) {
 
 void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
     emit closeBrowser();
-    if (response.contains("error")) {
+    if (response.contains(QString::fromLatin1("error"))) {
         qWarning() << "O2Facebook::onVerificationReceived: Verification failed";
         foreach (QString key, response.keys()) {
             qWarning() << "O2Facebook::onVerificationReceived:" << key << response.value(key);
@@ -33,23 +33,23 @@ void O2Facebook::onVerificationReceived(const QMap<QString, QString> response) {
     }
 
     // Save access code
-    setCode(response.value(O2_OAUTH2_CODE));
+    setCode(response.value(QString::fromLatin1(O2_OAUTH2_CODE)));
 
     // Exchange access code for access/refresh tokens
     QUrl url(tokenUrl_);
 #if QT_VERSION < 0x050000
-    url.addQueryItem(O2_OAUTH2_CLIENT_ID, clientId_);
-    url.addQueryItem(O2_OAUTH2_CLIENT_SECRET, clientSecret_);
-    url.addQueryItem(O2_OAUTH2_SCOPE, scope_);
-    url.addQueryItem(O2_OAUTH2_CODE, code());
-    url.addQueryItem(O2_OAUTH2_REDIRECT_URI, redirectUri_);
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_CLIENT_ID), clientId_);
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_CLIENT_SECRET), clientSecret_);
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_SCOPE), scope_);
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_CODE), code());
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_REDIRECT_URI), redirectUri_);
 #else
     QUrlQuery query(url);
-    query.addQueryItem(O2_OAUTH2_CLIENT_ID, clientId_);
-    query.addQueryItem(O2_OAUTH2_CLIENT_SECRET, clientSecret_);
-    query.addQueryItem(O2_OAUTH2_SCOPE, scope_);
-    query.addQueryItem(O2_OAUTH2_CODE, code());
-    query.addQueryItem(O2_OAUTH2_REDIRECT_URI, redirectUri_);
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_CLIENT_ID), clientId_);
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_CLIENT_SECRET), clientSecret_);
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_SCOPE), scope_);
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_CODE), code());
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_REDIRECT_URI), redirectUri_);
     url.setQuery(query);
 #endif
 
@@ -67,17 +67,17 @@ void O2Facebook::onTokenReplyFinished() {
         // Process reply
         QByteArray replyData = tokenReply->readAll();
         QMap<QString, QString> reply;
-        foreach (QString pair, QString(replyData).split("&")) {
-            QStringList kv = pair.split("=");
+        foreach (QString pair, QString::fromLatin1(replyData).split(QString::fromLatin1("&"))) {
+            QStringList kv = pair.split(QString::fromLatin1("="));
             if (kv.length() == 2) {
                 reply.insert(kv[0], kv[1]);
             }
         }
 
         // Interpret reply
-        setToken(reply.value(O2_OAUTH2_ACCESS_TOKEN, ""));
+        setToken(reply.value(QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN), QString()));
         setExpires(reply.value(FB_EXPIRES_KEY).toInt());
-        setRefreshToken(reply.value(O2_OAUTH2_REFRESH_TOKEN, ""));
+        setRefreshToken(reply.value(QString::fromLatin1(O2_OAUTH2_REFRESH_TOKEN), QString()));
 
         timedReplies_.remove(tokenReply);
         emit linkedChanged();

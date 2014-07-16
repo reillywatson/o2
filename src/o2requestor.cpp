@@ -132,10 +132,10 @@ int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operat
     id_ = currentId++;
     url_ = url = req.url();
 #if QT_VERSION < 0x050000
-    url.addQueryItem(O2_OAUTH2_ACCESS_TOKEN, authenticator_->token());
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN), authenticator_->token());
 #else
     QUrlQuery query(url);
-    query.addQueryItem(O2_OAUTH2_ACCESS_TOKEN, authenticator_->token());
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN), authenticator_->token());
     url.setQuery(query);
 #endif
     request_.setUrl(url);
@@ -168,10 +168,10 @@ void O2Requestor::retry() {
     reply_->deleteLater();
     QUrl url = url_;
 #if QT_VERSION < 0x050000
-    url.addQueryItem(O2_OAUTH2_ACCESS_TOKEN, authenticator_->token());
+    url.addQueryItem(QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN), authenticator_->token());
 #else
     QUrlQuery query(url);
-    query.addQueryItem(O2_OAUTH2_ACCESS_TOKEN, authenticator_->token());
+    query.addQueryItem(QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN), authenticator_->token());
     url.setQuery(query);
 #endif
     request_.setUrl(url);

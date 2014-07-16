@@ -5,13 +5,13 @@
 
 #include "tweeter.h"
 
-const char OPT_OAUTH[] = "-o";
-const char OPT_XAUTH[] = "-x";
-const char OPT_USERNAME[] = "-u";
-const char OPT_PASSWORD[] = "-p";
-const char OPT_STATUS[] = "-m";
+const QString OPT_OAUTH = QString::fromLatin1("-o");
+const QString OPT_XAUTH = QString::fromLatin1("-x");
+const QString OPT_USERNAME = QString::fromLatin1("-u");
+const QString OPT_PASSWORD = QString::fromLatin1("-p");
+const QString OPT_STATUS = QString::fromLatin1("-m");
 
-const char USAGE[] = "\n"
+const QString USAGE = QString::fromLatin1("\n"
                      "Usage: tweetdemo [OPTION]...\n"
                      "Get OAuth access tokens from Twitter's OAuth service and "
                      "(optionally) post a status update on a user's timeline\n"
@@ -20,7 +20,7 @@ const char USAGE[] = "\n"
                      "  %2\t\tLink with Twitter XAuth service, i.e get access tokens using the XAuth protocol\n"
                      "  %3 <username>\tTwitter username to be used while using XAuth (-x option)\n"
                      "  %4 <password>\tTwitter password to be used while using XAuth (-x option)\n"
-                     "  %5\t\tStatus update message, enclosed in double quotes\n";
+                     "  %5\t\tStatus update message, enclosed in double quotes\n");
 
 
 class Helper : public QObject
@@ -36,11 +36,11 @@ public slots:
 
         QStringList argList = qApp->arguments();
 
-        QByteArray help = QString(USAGE).arg(OPT_OAUTH,
-                                             OPT_XAUTH,
-                                             OPT_USERNAME,
-                                             OPT_PASSWORD,
-                                             OPT_STATUS).toLatin1();
+        QByteArray help = USAGE.arg(OPT_OAUTH,
+                                    OPT_XAUTH,
+                                    OPT_USERNAME,
+                                    OPT_PASSWORD,
+                                    OPT_STATUS).toLatin1();
 
         const char* helpText = help.constData();
 

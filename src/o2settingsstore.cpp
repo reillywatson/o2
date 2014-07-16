@@ -34,7 +34,7 @@ void O2SettingsStore::setGroupKey(const QString &groupKey) {
 }
 
 QString O2SettingsStore::value(const QString &key, const QString &defaultValue) {
-    QString fullKey = groupKey_.isEmpty() ? key : (groupKey_ + '/' + key);
+    QString fullKey = groupKey_.isEmpty() ? key : (groupKey_ + QLatin1Char('/') + key);
     if (!settings_->contains(fullKey)) {
         return defaultValue;
     }
@@ -42,6 +42,6 @@ QString O2SettingsStore::value(const QString &key, const QString &defaultValue) 
 }
 
 void O2SettingsStore::setValue(const QString &key, const QString &value) {
-    QString fullKey = groupKey_.isEmpty() ? key : (groupKey_ + '/' + key);
+    QString fullKey = groupKey_.isEmpty() ? key : (groupKey_ + QLatin1Char('/') + key);
     settings_->setValue(fullKey, crypt_.encryptToString(value));
 }

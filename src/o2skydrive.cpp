@@ -14,9 +14,9 @@
 // define trace() if (0) qDebug()
 
 O2Skydrive::O2Skydrive(QObject *parent): O2(parent) {
-    setRequestUrl("https://login.live.com/oauth20_authorize.srf");
-    setTokenUrl("https://login.live.com/oauth20_token.srf");
-    setRefreshTokenUrl("https://login.live.com/oauth20_token.srf");
+    setRequestUrl(QString::fromLatin1("https://login.live.com/oauth20_authorize.srf"));
+    setTokenUrl(QString::fromLatin1("https://login.live.com/oauth20_token.srf"));
+    setRefreshTokenUrl(QString::fromLatin1("https://login.live.com/oauth20_token.srf"));
 }
 
 void O2Skydrive::link() {
@@ -26,14 +26,14 @@ void O2Skydrive::link() {
         return;
     }
 
-    redirectUri_ = QString("https://login.live.com/oauth20_desktop.srf");
+    redirectUri_ = QString::fromLatin1("https://login.live.com/oauth20_desktop.srf");
 
     // Assemble intial authentication URL
     QList<QPair<QString, QString> > parameters;
-    parameters.append(qMakePair(QString(O2_OAUTH2_RESPONSE_TYPE), (grantFlow_ == GrantFlowAuthorizationCode) ? QString(O2_OAUTH2_CODE) : QString(O2_OAUTH2_TOKEN)));
-    parameters.append(qMakePair(QString(O2_OAUTH2_CLIENT_ID), clientId_));
-    parameters.append(qMakePair(QString(O2_OAUTH2_REDIRECT_URI), redirectUri_));
-    parameters.append(qMakePair(QString(O2_OAUTH2_SCOPE), scope_));
+    parameters.append(qMakePair(QString::fromLatin1(O2_OAUTH2_RESPONSE_TYPE), (grantFlow_ == GrantFlowAuthorizationCode) ? QString::fromLatin1(O2_OAUTH2_CODE) : QString::fromLatin1(O2_OAUTH2_TOKEN)));
+    parameters.append(qMakePair(QString::fromLatin1(O2_OAUTH2_CLIENT_ID), clientId_));
+    parameters.append(qMakePair(QString::fromLatin1(O2_OAUTH2_REDIRECT_URI), redirectUri_));
+    parameters.append(qMakePair(QString::fromLatin1(O2_OAUTH2_SCOPE), scope_));
 
     // Show authentication URL with a web browser
     QUrl url(requestUrl_);
@@ -59,7 +59,7 @@ void O2Skydrive::redirected(const QUrl &url) {
         urlCode = url.queryItemValue(O2_OAUTH2_CODE);
 #else
         QUrlQuery query(url);
-        urlCode = query.queryItemValue(O2_OAUTH2_CODE);
+        urlCode = query.queryItemValue(QString::fromLatin1(O2_OAUTH2_CODE));
 #endif
         if (urlCode.isEmpty()) {
             trace() << " Code not received";
@@ -70,13 +70,13 @@ void O2Skydrive::redirected(const QUrl &url) {
 
         // Exchange access code for access/refresh tokens
         QNetworkRequest tokenRequest(tokenUrl_);
-        tokenRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+        tokenRequest.setHeader(QNetworkRequest::ContentTypeHeader, QString::fromLatin1("application/x-www-form-urlencoded"));
         QMap<QString, QString> parameters;
-        parameters.insert(O2_OAUTH2_CODE, code());
-        parameters.insert(O2_OAUTH2_CLIENT_ID, clientId_);
-        parameters.insert(O2_OAUTH2_CLIENT_SECRET, clientSecret_);
-        parameters.insert(O2_OAUTH2_REDIRECT_URI, redirectUri_);
-        parameters.insert(O2_OAUTH2_GRANT_TYPE, O2_AUTHORIZATION_CODE);
+        parameters.insert(QString::fromLatin1(O2_OAUTH2_CODE), code());
+        parameters.insert(QString::fromLatin1(O2_OAUTH2_CLIENT_ID), clientId_);
+        parameters.insert(QString::fromLatin1(O2_OAUTH2_CLIENT_SECRET), clientSecret_);
+        parameters.insert(QString::fromLatin1(O2_OAUTH2_REDIRECT_URI), redirectUri_);
+        parameters.insert(QString::fromLatin1(O2_OAUTH2_GRANT_TYPE), QString::fromLatin1(O2_AUTHORIZATION_CODE));
         QByteArray data = buildRequestBody(parameters);
         QNetworkReply *tokenReply = manager_->post(tokenRequest, data);
         timedReplies_.add(tokenReply);
@@ -84,25 +84,25 @@ void O2Skydrive::redirected(const QUrl &url) {
         connect(tokenReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onTokenReplyError(QNetworkReply::NetworkError)), Qt::QueuedConnection);
     } else {
         // Get access token
-        QString urlToken = "";
-        QString urlRefreshToken = "";
+        QString urlToken;
+        QString urlRefreshToken;
         int urlExpiresIn = 0;
 
-        QStringList parts = url.toString().split("#");
+        QStringList parts = url.toString().split(QString::fromLatin1("#"));
         if (parts.length() > 1) {
-            foreach (QString item, parts[1].split("&")) {
-                int index = item.indexOf("=");
+            foreach (QString item, parts[1].split(QString::fromLatin1("&"))) {
+                int index = item.indexOf(QString::fromLatin1("="));
                 if (index == -1) {
                     continue;
                 }
                 QString key = item.left(index);
                 QString value = item.mid(index + 1);
                 trace() << "" << key;
-                if (key == O2_OAUTH2_ACCESS_TOKEN) {
+                if (key == QString::fromLatin1(O2_OAUTH2_ACCESS_TOKEN)) {
                     urlToken = value;
-                } else if (key == O2_OAUTH2_EXPIRES_IN) {
+                } else if (key == QString::fromLatin1(O2_OAUTH2_EXPIRES_IN)) {
                     urlExpiresIn = value.toInt();
-                } else if (key == O2_OAUTH2_REFRESH_TOKEN) {
+                } else if (key == QString::fromLatin1(O2_OAUTH2_REFRESH_TOKEN)) {
                     urlRefreshToken = value;
                 }
             }
